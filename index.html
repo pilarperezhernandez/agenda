@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Agenda</title>
+<meta name="description" content="Agenda de estudio: horario, tareas y planificador automático. Study planner: timetable, tasks and automatic scheduling.">
 <meta name="application-name" content="Agenda">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -43,7 +44,7 @@
   <div class="box">
     <div class="logo">a</div>
     <h1><em>Agenda</em></h1>
-    <p>Solo para Pilar.</p>
+    <p>Tu horario, tus tareas y un planificador que reparte el estudio en tus huecos.</p>
     <form id="authForm">
       <div class="field"><label>Correo</label><input type="email" id="aEmail" autocomplete="username" required></div>
       <div class="field"><label>Contraseña</label><input type="password" id="aPass" autocomplete="current-password" required></div>
@@ -51,6 +52,7 @@
       <button class="btn primary" type="submit" id="aGo">Entrar</button>
       <p style="margin:12px 0 0"><a href="#" id="aForgot" style="color:var(--muted)">He olvidado la contraseña</a></p>
     </form>
+    <div style="border-top:1px solid var(--line);margin-top:16px;padding-top:14px;text-align:center"><button class="btn" id="aDemo" type="button" style="width:100%;justify-content:center">Probar sin cuenta</button><p class="hint" style="margin:8px 0 0">Modo demo: los datos se guardan solo en este navegador.</p></div>
   </div>
 </div>
 <div class="offline" id="offline">Sin conexión · los cambios se guardarán al volver</div>
@@ -65,6 +67,7 @@
       <button data-view="settings" title="Ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Ajustes</button>
     </nav>
     <div class="bottom">
+      <button class="iconbtn" id="langBtn" title="Idioma" style="font-size:11px;font-weight:700;letter-spacing:.04em">ES/EN</button>
       <button class="iconbtn" id="themeBtn" title="Tema claro / oscuro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button>
     </div>
   </aside>
@@ -94,6 +97,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script src="src/core.js"></script>
+<script src="src/i18n.js"></script>
 <script src="src/db.js"></script>
 <script src="src/app.js"></script>
 <script>
