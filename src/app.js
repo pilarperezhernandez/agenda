@@ -68,9 +68,20 @@ $('#authForm').onsubmit=async ev=>{ ev.preventDefault(); const b=$('#aGo'); b.di
   const { error } = await DB.signIn($('#aEmail').value.trim(), $('#aPass').value);
   b.disabled=false; if(error){ $('#aErr').textContent = /invalid/i.test(error.message)?'Correo o contraseña incorrectos':error.message; return; }
   $('#aPass').value=''; };
+$('#aDemo').onclick=()=>{ try{ localStorage.setItem('agendaDemo','1'); }catch{} connect(); };
 $('#aForgot').onclick=async ev=>{ ev.preventDefault(); const email=$('#aEmail').value.trim(); if(!email){ $('#aErr').textContent='Escribe tu correo y vuelve a pulsar'; $('#aEmail').focus(); return; } const {error}=await DB.resetPassword(email); $('#aErr').textContent=error?error.message:'Te hemos enviado un enlace al correo'; };
+function setLang(l){ I18N.set(l); location.reload(); }
+function seedDemo(){ const o=local.read(); if(o.subjects&&Object.keys(o.subjects).length) return; const ds=dstr(new Date()); const monday=dstr(startOfWeek(new Date())); const nextMon=dstr(addDays(startOfWeek(new Date()),7));
+  const subjects={alg:{id:'alg',name:I18N.lang==='en'?'Linear algebra':'Álgebra lineal',short:I18N.lang==='en'?'Algebra':'Álgebra',color:'#009dff',order:1},fis:{id:'fis',name:I18N.lang==='en'?'Physics':'Física',short:I18N.lang==='en'?'Physics':'Física',color:'#E8731A',order:2},pro:{id:'pro',name:I18N.lang==='en'?'Programming':'Programación',short:I18N.lang==='en'?'Programming':'Programación',color:'#0F9B8E',order:3}};
+  const types={clase:{id:'clase',name:I18N.lang==='en'?'Class':'Clase',color:'#6B7188',order:1,style:'clase'},laboratorio:{id:'laboratorio',name:I18N.lang==='en'?'Lab':'Laboratorio',color:'#6B7188',order:2,style:'lab'},estudio:{id:'estudio',name:I18N.lang==='en'?'Study block':'Bloque de estudio',color:'#7270e1',order:3,style:'estudio'},entrega:{id:'entrega',name:I18N.lang==='en'?'Deliverable':'Entrega',color:'#D93B47',order:4,style:'entrega'},examen:{id:'examen',name:I18N.lang==='en'?'Exam':'Examen',color:'#ff7300',order:5,style:'examen'},practicas:{id:'practicas',name:I18N.lang==='en'?'Work':'Trabajo',color:'#5900ff',order:6,style:'practicas'},cita:{id:'cita',name:I18N.lang==='en'?'Appointment':'Cita',color:'#b0d0e8',order:7,style:'cita'},personal:{id:'personal',name:'Personal',color:'#7e4e97',order:8,style:'personal'},bloqueo:{id:'bloqueo',name:I18N.lang==='en'?'Unavailable':'No disponible',color:'#707070',order:9,style:'bloqueo'}};
+  const classes={c1:{id:'c1',dow:1,start:'09:00',end:'10:50',subjectId:'alg',typeId:'clase',room:'A-101',from:monday,until:dstr(addDays(new Date(),120)),skip:[]},c2:{id:'c2',dow:2,start:'11:00',end:'12:50',subjectId:'fis',typeId:'clase',room:'B-204',from:monday,until:dstr(addDays(new Date(),120)),skip:[]},c3:{id:'c3',dow:3,start:'15:00',end:'16:50',subjectId:'pro',typeId:'laboratorio',room:'Lab 2',from:monday,until:dstr(addDays(new Date(),120)),skip:[]},c4:{id:'c4',dow:4,start:'09:00',end:'10:50',subjectId:'pro',typeId:'clase',room:'A-101',from:monday,until:dstr(addDays(new Date(),120)),skip:[]}};
+  const tasks={t1:{id:'t1',kind:'task',title:I18N.lang==='en'?'Assignment 2':'Práctica 2',subjectId:'pro',typeId:'entrega',due:nextMon+'T23:59',estimateMin:180,priority:2,notes:'',done:false,progress:0,sections:[],checklist:[],createdAt:iso(new Date())},t2:{id:'t2',kind:'exam',title:I18N.lang==='en'?'Midterm':'Parcial',subjectId:'alg',typeId:'examen',due:dstr(addDays(new Date(),12))+'T10:00',priority:2,notes:'',done:false,progress:0,estimateMin:420,sections:[{id:'s1',name:I18N.lang==='en'?'Theory':'Teoría',estimateMin:180,progress:0,review:false},{id:'s2',name:I18N.lang==='en'?'Exercises':'Ejercicios',estimateMin:180,progress:0,review:false},{id:'s3',name:I18N.lang==='en'?'Review':'Repaso',estimateMin:60,progress:0,review:true}],checklist:[],createdAt:iso(new Date())}};
+  local.write({subjects,types,classes,tasks,events:{},dayrules:{},rules:{},chat:{},log:{},settings:{...C.DEFAULT_SETTINGS}}); }
 async function connect(){
   const dot=$('#syncdot');
+  let demo=false; try{ demo=localStorage.getItem('agendaDemo')==='1'; }catch{}
+  const cfg=window.AGENDA_CONFIG||{}; if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY) demo=true;
+  if(demo){ localMode=true; showAuth(false); seedDemo(); dot.classList.add('local'); dot.title='Guardando solo en este navegador'; applyLocal(); autoReady=true; autoPlan(true); return; }
   const sess = await DB.session();
   const fromLink=/type=(invite|recovery|magiclink)/.test(location.hash||'');
   if(!sess){ if(fromLink) sessionStorage.setItem('needPw','1'); showAuth(true); DB.onAuth(s=>{ if(s&&!db) connect(); }); return; }
@@ -137,7 +148,7 @@ function render(){
   else if(view==='month'){ t.innerHTML=`<em>${MON[cursor.getMonth()]}</em> ${cursor.getFullYear()}`; renderMonth(); }
   else if(view==='tasks'){ t.innerHTML='<em>Tareas</em>'; renderTasks(); }
   else { t.innerHTML='<em>Ajustes</em>'; renderSettings(); }
-  $('#pracBtn').hidden = !(view==='week'||view==='today');
+  $('#pracBtn').hidden = !(view==='week'||view==='today'); $('#pracBtn').textContent=workName();
   renderBanner(); schedulePlan();
 }
 function renderBanner(){ const b=$('#banner'); const ws=C.warnings(S,now()); const hide=sessionStorage.getItem('bannerHide');
@@ -396,13 +407,17 @@ function renderSettings(){
   </div>
   <div class="card"><h3>Desplazamientos y universidad</h3>
     <div class="row"><label class="l">Trayecto a clase</label>${num('sCommute',s.commuteMin??60,0,5,'min antes de la primera clase y después de la última')}</div>
-    <div class="row"><label class="l">Trayecto casa → prácticas</label>${num('sCommuteP',s.commutePracMin??30,0,5,'min')}</div>
-    <div class="row"><label class="l">Salgo de la universidad a las</label><input type="time" id="sLeave" value="${s.campusLeave||''}"> <span class="hint">si la última clase acaba antes, te quedas a estudiar allí</span></div>
+    <div class="row"><label class="l">Trayecto casa → trabajo</label>${num('sCommuteP',s.commutePracMin??30,0,5,'min')}</div>
+    <div class="row"><label class="l">Salgo del campus a las</label><input type="time" id="sLeave" value="${s.campusLeave||''}"> <span class="hint">si la última clase acaba antes, te quedas a estudiar allí</span></div>
     <div class="row"><label class="l">Espera máxima allí</label>${num('sWait',s.campusWaitMax??90,0,15,'min')}</div>
-    <div class="row"><label class="l">Nombre del campus</label><input type="text" id="sCampus" value="${esc(s.campusName||'ICAI')}" style="width:140px"></div>
+    <div class="row"><label class="l">Nombre del campus</label><input type="text" id="sCampus" value="${esc(s.campusName||'Campus')}" style="width:140px"></div>
+    <div class="row"><label class="l">Nombre del trabajo (prácticas, empleo)</label><input type="text" id="sWorkName" value="${esc(s.workName||'')}" style="width:140px" placeholder="Trabajo"></div>
+    <div class="row"><label class="l">Hora de entrada</label><input type="time" id="sWorkStart" value="${s.workStart||'09:00'}"></div>
+    <div class="row"><label class="l">Lugar de trabajo</label><input type="text" id="sWorkPlace" value="${esc(s.workPlace||'')}" style="width:140px"></div>
   </div>
   <div class="card"><h3>Vista</h3>
     <div class="row"><label class="l">Horas visibles</label><input type="number" id="sG0" value="${s.gridStart}" min="0" max="12"> <span>a</span> <input type="number" id="sG1" value="${s.gridEnd}" min="13" max="24"></div>
+    <div class="row"><label class="l">Idioma</label><div class="seg"><button id="lgEs" class="${I18N.lang==='es'?'active':''}">Español</button><button id="lgEn" class="${I18N.lang==='en'?'active':''}">Inglés</button></div></div>
     <div class="row"><label class="l">Color de los bloques por</label><div class="seg"><button id="cbS" class="${s.colorBy==='subject'?'active':''}">Asignatura</button><button id="cbT" class="${s.colorBy==='type'?'active':''}">Tipo</button></div></div>
     <div class="actions"><span class="spacer"></span><button class="btn primary" id="sSave">Guardar ajustes</button></div>
   </div>
@@ -410,15 +425,16 @@ function renderSettings(){
   <div class="card"><h3>Tipos</h3><p class="hint">Cada tipo tiene un estilo visual fijo (clase, laboratorio, estudio, entrega, examen, prácticas, cita, personal, no disponible). Puedes añadir tipos propios eligiendo con qué estilo se dibujan.</p><div id="typeList"></div><button class="btn" id="addType">+ Tipo</button></div>
   <div class="card"><h3>Clases fijas</h3><p class="hint">Se repiten cada semana entre las fechas indicadas. Para un cambio puntual, abre la clase en la semana y usa “Saltar este día”.</p><div id="classList"></div><button class="btn" id="addClass">+ Clase fija</button></div>
   <div class="card"><h3>Copia de seguridad</h3><div class="actions" style="margin-top:0"><button class="btn" id="exportBtn">Exportar JSON</button><button class="btn" id="importBtn">Importar JSON</button><input type="file" id="importFile" accept="application/json" hidden></div></div>
-  <div class="card"><h3>Cuenta</h3><p class="hint">Sesión iniciada como <b>${esc(userEmail)}</b>. La agenda se sincroniza entre todos tus dispositivos.</p>
+  ${localMode?`<div class="card"><h3>Cuenta</h3><p class="hint">Modo demo: los datos se guardan solo en este navegador.</p><div class="actions"><button class="btn danger" id="demoExit">Salir del modo demo</button><span class="hint">Borrar los datos de prueba y volver a la pantalla de acceso</span></div></div>`:`<div class="card"><h3>Cuenta</h3><p class="hint">Sesión iniciada como <b>${esc(userEmail)}</b>. La agenda se sincroniza entre todos tus dispositivos.</p>
     <div class="row"><label class="l">Nueva contraseña</label><input type="password" id="pw1" autocomplete="new-password" style="width:180px"> <input type="password" id="pw2" placeholder="Repetir" autocomplete="new-password" style="width:180px"> <button class="btn" id="pwChange">Cambiar</button></div>
-    <div class="actions"><button class="btn danger" id="logout">Cerrar sesión</button><span class="hint">Para instalar la app: en iPhone/iPad, Compartir › «Añadir a pantalla de inicio»; en el ordenador, el icono de instalar en la barra de direcciones.</span></div></div>
+    <div class="actions"><button class="btn danger" id="logout">Cerrar sesión</button><span class="hint">Para instalar la app: en iPhone/iPad, Compartir › «Añadir a pantalla de inicio»; en el ordenador, el icono de instalar en la barra de direcciones.</span></div></div>`}
   <p class="hint" style="text-align:center">Atajos: N nuevo · T hoy · ←/→ · 1 Hoy, 2 Semana, 3 Mes, 4 Tareas</p>`;
   let colorBy=s.colorBy;
+  $('#lgEs').onclick=()=>setLang('es'); $('#lgEn').onclick=()=>setLang('en');
   $('#cbS').onclick=()=>{colorBy='subject';$('#cbS').classList.add('active');$('#cbT').classList.remove('active');};
   $('#cbT').onclick=()=>{colorBy='type';$('#cbT').classList.add('active');$('#cbS').classList.remove('active');};
   $('#sPlan').onclick=async()=>{ if(await askConfirm('Se rehacen todos los bloques automáticos que no hayas fijado (hoy y mañana no se tocan). ¿Seguir?','Reorganizar')){ beginBatch('ui'); await autoPlan(false,{force:true}); await writeLog(endBatch('Reorganización completa')); } };
-  $('#sSave').onclick=()=>{ const v=id=>$(id).value; save('settings','main',{ ...s, weekday:[v('#sWd0'),v('#sWd1')], weekend:[v('#sWe0'),v('#sWe1')], weekdaySoftEnd:v('#sWdS'), weekendSoftEnd:v('#sWeS'), blockMax:+v('#sBlock'), blockMin:+v('#sBlockMin'), breakMin:+v('#sBreak'), dailyCap:+v('#sCap'), maxSubjectsPerDay:+v('#sMaxSubj'), concentrate:$('#sConc').checked, freezeDays:+v('#sFreeze'), pastCountsAsDone:$('#sPast').checked, warnHours:+v('#sWarn'), overdueDays:+v('#sOver'), gridStart:+v('#sG0'), gridEnd:+v('#sG1'), commuteMin:+v('#sCommute'), commutePracMin:+v('#sCommuteP'), campusLeave:v('#sLeave'), campusWaitMax:+v('#sWait'), campusName:v('#sCampus').trim()||'ICAI', reviewDays:+v('#sReview'), defaultExamHours:+v('#sExamH'), colorBy }).then(()=>toast('Ajustes guardados')); };
+  $('#sSave').onclick=()=>{ const v=id=>$(id).value; save('settings','main',{ ...s, weekday:[v('#sWd0'),v('#sWd1')], weekend:[v('#sWe0'),v('#sWe1')], weekdaySoftEnd:v('#sWdS'), weekendSoftEnd:v('#sWeS'), blockMax:+v('#sBlock'), blockMin:+v('#sBlockMin'), breakMin:+v('#sBreak'), dailyCap:+v('#sCap'), maxSubjectsPerDay:+v('#sMaxSubj'), concentrate:$('#sConc').checked, freezeDays:+v('#sFreeze'), pastCountsAsDone:$('#sPast').checked, warnHours:+v('#sWarn'), overdueDays:+v('#sOver'), gridStart:+v('#sG0'), gridEnd:+v('#sG1'), commuteMin:+v('#sCommute'), commutePracMin:+v('#sCommuteP'), campusLeave:v('#sLeave'), campusWaitMax:+v('#sWait'), campusName:v('#sCampus').trim()||'Campus', workName:v('#sWorkName').trim(), workStart:v('#sWorkStart')||'09:00', workPlace:v('#sWorkPlace').trim(), reviewDays:+v('#sReview'), defaultExamHours:+v('#sExamH'), colorBy }).then(()=>toast('Ajustes guardados')); };
   const listEditor=(coll,container,fields)=>{
     const c=$(container); const items=Object.values(S[coll]).sort((a,b)=>(a.order??0)-(b.order??0)||a.name.localeCompare(b.name));
     c.innerHTML=items.map(it=>`<div class="list-row" data-id="${it.id}"><input type="color" value="${it.color||'#6B7188'}" data-f="color"><input type="text" value="${esc(it.name)}" data-f="name" placeholder="Nombre">${fields.short?`<input type="text" value="${esc(it.short||'')}" data-f="short" placeholder="Abreviatura">`:`<select data-f="style">${C.STYLES.map(st=>`<option value="${st}" ${C.styleOf(S,it.id)===st?'selected':''}>${STYLE_LABEL[st]}</option>`).join('')}</select>`}<input type="number" value="${it.order??0}" data-f="order" title="Orden" style="width:100%"><button class="x" title="Borrar">✕</button></div>`).join('') || '<div class="hint" style="margin-bottom:8px">Ninguno todavía.</div>';
@@ -434,8 +450,9 @@ function renderSettings(){
   $('#addClass').onclick=()=>openClassEditor(null);
   $('#exportBtn').onclick=async()=>{ const data={settings:S.settings}; for(const c of COLLS) data[c]=S[c]; const text=JSON.stringify(data,null,2), filename=`agenda-${dstr(new Date())}.json`;
     const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/json'})); a.download=filename; a.click(); toast('Copia descargada'); };
-  $('#pwChange').onclick=async()=>{ const p1=$('#pw1').value, p2=$('#pw2').value; if(p1.length<8){ toast('Mínimo 8 caracteres'); return; } if(p1!==p2){ toast('Las contraseñas no coinciden'); return; } const {error}=await DB.updatePassword(p1); if(error) toast('No se pudo cambiar: '+error.message); else { toast('Contraseña cambiada'); $('#pw1').value=$('#pw2').value=''; } };
-  $('#logout').onclick=async()=>{ if(await askConfirm('¿Cerrar sesión en este dispositivo?','Salir')) await DB.signOut(); };
+  const dx=$('#demoExit'); if(dx) dx.onclick=async()=>{ if(await askConfirm('¿Borrar los datos de prueba?','Borrar')){ try{ localStorage.removeItem('agenda'); localStorage.removeItem('agendaDemo'); }catch{} location.reload(); } };
+  if($('#pwChange')) $('#pwChange').onclick=async()=>{ const p1=$('#pw1').value, p2=$('#pw2').value; if(p1.length<8){ toast('Mínimo 8 caracteres'); return; } if(p1!==p2){ toast('Las contraseñas no coinciden'); return; } const {error}=await DB.updatePassword(p1); if(error) toast('No se pudo cambiar: '+error.message); else { toast('Contraseña cambiada'); $('#pw1').value=$('#pw2').value=''; } };
+  if($('#logout')) $('#logout').onclick=async()=>{ if(await askConfirm('¿Cerrar sesión en este dispositivo?','Salir')) await DB.signOut(); };
   $('#importBtn').onclick=()=>$('#importFile').click();
   $('#importFile').onchange=async ev=>{ const f=ev.target.files[0]; if(!f) return; try{ const data=JSON.parse(await f.text()); if(!await askConfirm('Esto añade/actualiza lo que haya en el archivo. ¿Continuar?','Importar')) return; for(const c of COLLS) for(const [id,v] of Object.entries(data[c]||{})) await save(c,id,v); if(data.settings) await save('settings','main',data.settings); toast('Importado'); }catch{ toast('Archivo no válido'); } };
 }
@@ -485,17 +502,18 @@ function openClassEditor(id){
 // prácticas de la semana
 function pracEnd(date){ const campus=C.campusOn(S,date); return campus.length?tfromMins(mins(campus[0].start.slice(11))-(S.settings.commuteMin||0)):'14:00'; }
 function pracEventOn(ds){ return Object.values(S.events).find(e=>C.styleOf(S,e.typeId)==='practicas'&&e.start.slice(0,10)===ds); }
+const workName=()=>S.settings.workName||STYLE_LABEL.practicas, workStart=()=>S.settings.workStart||'09:00';
 function openPracticas(){
-  const a=startOfWeek(view==='month'?new Date():cursor); let rows='';
+  const a=startOfWeek(view==='month'?new Date():cursor); let rows=''; const ws=workStart();
   for(let i=0;i<5;i++){ const d=addDays(a,i), ds=dstr(d); const ex=pracEventOn(ds); const end=ex?ex.end.slice(11):pracEnd(d);
-    rows+=`<label class="task" style="grid-template-columns:24px 1fr auto;cursor:pointer"><input type="checkbox" data-ds="${ds}" ${ex?'checked':''}><div><div class="tt">${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()].slice(0,3)}</div><div class="sub">09:00–${end}${ex?'':' · sale a tiempo para la primera clase'}</div></div><span class="hint">${fmtDur(mins(end)-540)}</span></label>`; }
-  openSheet(`<h2>Prácticas · semana del ${a.getDate()} ${MON[a.getMonth()].slice(0,3)}</h2><p class="hint" style="margin:0 0 10px">Marca los días. Empiezan a las 9:00 y terminan a la hora a la que tienes que salir para la primera clase.</p>${rows}
+    rows+=`<label class="task" style="grid-template-columns:24px 1fr auto;cursor:pointer"><input type="checkbox" data-ds="${ds}" ${ex?'checked':''}><div><div class="tt">${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()].slice(0,3)}</div><div class="sub">${ws}–${end}${ex?'':' · sale a tiempo para la primera clase'}</div></div><span class="hint">${fmtDur(mins(end)-mins(ws))}</span></label>`; }
+  openSheet(`<h2>${esc(workName())} · semana del ${a.getDate()} ${MON[a.getMonth()].slice(0,3)}</h2><p class="hint" style="margin:0 0 10px">Marca los días. Empiezan a la hora de entrada y terminan a la hora a la que tienes que salir para la primera clase.</p>${rows}
     <div class="actions"><span class="spacer"></span><button class="btn" id="pCancel">Cancelar</button><button class="btn primary" id="pSave">Guardar</button></div>`);
   sheet.querySelector('#pCancel').onclick=closeSheet;
   sheet.querySelector('#pSave').onclick=async()=>{ beginBatch('ui'); const tid=Object.values(S.types).find(t=>C.styleOf(S,t.id)==='practicas')?.id||'practicas'; for(const cb of sheet.querySelectorAll('input[type=checkbox]')){ const ds=cb.dataset.ds, ex=pracEventOn(ds);
-      if(cb.checked&&!ex){ const id=uid(); await save('events',id,{id,title:'Prácticas',subjectId:null,typeId:tid,start:`${ds}T09:00`,end:`${ds}T${pracEnd(dayOf(ds))}`,location:'AVEVA',notes:''}); }
+      if(cb.checked&&!ex){ const id=uid(); await save('events',id,{id,title:workName(),subjectId:null,typeId:tid,start:`${ds}T${ws}`,end:`${ds}T${pracEnd(dayOf(ds))}`,location:S.settings.workPlace||'',notes:''}); }
       else if(!cb.checked&&ex) await remove('events',ex.id); }
-    await writeLog(endBatch('Prácticas de la semana')); closeSheet(); toast('Prácticas de la semana guardadas'); };
+    await writeLog(endBatch('Días de trabajo de la semana')); closeSheet(); toast('Días de trabajo de la semana guardados'); };
 }
 $('#pracBtn').onclick=openPracticas;
 
@@ -529,7 +547,7 @@ function openEventEditor(o){
   const tt=q('#toTask'); if(tt) tt.onclick=()=>openTaskEditor({prefill:{title:q('#fTitle').value,subjectId:q('#fSubject').value}});
   if(t) q('#goTask').onclick=()=>openTaskEditor({id:t.id});
   if(o.id) q('#mDelete').onclick=async()=>{ beginBatch('ui'); await remove('events',o.id); await writeLog(endBatch('Evento borrado')); closeSheet(); };
-  const onType=()=>{ const st=C.styleOf(S,typeId); const nt=q('#mNote'); nt.hidden=true; if(st==='practicas'&&!o.id){ const ds=q('#fDate').value; const end=pracEnd(dayOf(ds)); q('#fStart').value='09:00'; q('#fEnd').value=end; if(!q('#fTitle').value) q('#fTitle').value='Prácticas'; q('#fLoc').value=q('#fLoc').value||'AVEVA'; nt.hidden=false; nt.textContent=`Termina a las ${end} para llegar a clase con margen.`; }
+  const onType=()=>{ const st=C.styleOf(S,typeId); const nt=q('#mNote'); nt.hidden=true; if(st==='practicas'&&!o.id){ const ds=q('#fDate').value; const end=pracEnd(dayOf(ds)); q('#fStart').value=workStart(); q('#fEnd').value=end; if(!q('#fTitle').value) q('#fTitle').value=workName(); q('#fLoc').value=q('#fLoc').value||S.settings.workPlace||''; nt.hidden=false; nt.textContent=`Termina a las ${end} para llegar a clase con margen.`; }
     syncKind(); };
   const syncExam=()=>{ const sel=q('#fExam'), sub=q('#fSubject'); if(!sel||!sub) return; const ex=S.events[sel.value]; if(ex&&C.styleOf(S,typeId)==='estudio'){ sub.value=ex.subjectId||''; sub.disabled=true; } else sub.disabled=false; };
   const syncKind=()=>{ const st=C.styleOf(S,typeId), w=q('#fExamWrap'), mk=q('#fMkTaskWrap'); if(w) w.hidden=st!=='estudio'; if(mk) mk.hidden=!(st==='examen'&&!o.id); const ti=q('#fTitle'); if(ti&&st==='estudio') ti.placeholder='Qué vas a hacer en concreto: p. ej. Ejercicios de Laplace T3'; syncExam();
@@ -611,6 +629,7 @@ window.App = { S, C, $, esc, toast, askConfirm, save, remove, beginBatch, endBat
 // ================= arranque =================
 $$('.nav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
 $$('.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+view));
+I18N.set(I18N.lang); I18N.apply(document.body); I18N.observe(); $('#langBtn').onclick=()=>setLang(I18N.lang==='en'?'es':'en');
 render(); connect();
 let tickDay=dstr(new Date());
 setInterval(()=>{ if(view==='week') renderWeek(); else if(view==='today') renderToday(); const d=dstr(new Date()); if(d!==tickDay){ tickDay=d; schedulePlan(); } },60000);

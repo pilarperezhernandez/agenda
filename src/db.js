@@ -4,7 +4,10 @@
 window.AgendaDB = (function(){
   'use strict';
   const cfg = window.AGENDA_CONFIG || {};
-  if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) { console.error('Falta config.js'); }
+  if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || !window.supabase) {
+    // Sin backend configurado: la app funciona en modo demo (solo este navegador)
+    return { configured: false, session: async () => null, onAuth(){}, onStatus(){}, start: async () => { throw new Error('sin backend'); }, stop(){}, collection(){ return { onSnapshot(){} }; }, doc(){ return { onSnapshot(){}, set: async()=>{}, delete: async()=>{} }; }, signIn: async () => ({ error: { message: 'Sin backend configurado' } }), signOut: async()=>{}, updatePassword: async()=>({error:{message:'Sin backend'}}), resetPassword: async()=>({error:{message:'Sin backend'}}) };
+  }
   const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
     realtime: { params: { eventsPerSecond: 10 } },
@@ -44,6 +47,7 @@ window.AgendaDB = (function(){
   }
 
   const api = {
+    configured: true,
     sb,
     get loaded(){ return loaded; },
     get online(){ return online; },

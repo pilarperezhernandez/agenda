@@ -22,19 +22,27 @@ const startOfWeek = d => { const x=new Date(d); x.setHours(0,0,0,0); const k=(x.
 const sameDay = (a,b) => dstr(a)===dstr(b);
 const dayOf = s => parse(String(s).slice(0,10)+'T00:00');
 const r15 = m => Math.ceil(m/15)*15;
+let LOCALE='es';
 const fmtDur = m => { m=Math.round(m); if(m<=0) return '0 min'; return m>=60 ? (m%60? `${Math.floor(m/60)} h ${m%60} min` : `${m/60} h`) : `${m} min`; };
 const fmtDate = s => { const d=parse(s); return `${DOW[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()].slice(0,3)}`; };
-const fmtDateLong = s => { const d=parse(s); return `${DOWL[d.getDay()]} ${d.getDate()} de ${MON[d.getMonth()]}`; };
+const fmtDateLong = s => { const d=parse(s); return LOCALE==='en' ? `${DOWL[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]}` : `${DOWL[d.getDay()]} ${d.getDate()} de ${MON[d.getMonth()]}`; };
 const durOf = e => (parse(e.end)-parse(e.start))/60000;
 const overlaps = (a0,a1,b0,b1) => a0<b1 && a1>b0;
 const uid = () => (typeof crypto!=='undefined' && crypto.randomUUID ? crypto.randomUUID().slice(0,8) : Math.random().toString(36).slice(2,10));
 
 // ---------- valores por defecto ----------
+const LOCALES = {
+  es:{ DOW:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'], DOWL:['domingo','lunes','martes','miércoles','jueves','viernes','sábado'], MON:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'], STYLE_LABEL:{ clase:'Clase', lab:'Laboratorio', estudio:'Estudio', entrega:'Entrega', examen:'Examen', practicas:'Trabajo', personal:'Personal', cita:'Cita', bloqueo:'No disponible' }, RULES_DAY:{ noexam:'Sin exámenes', examonly:'Solo exámenes', light:'Día ligero', free:'Libre' } },
+  en:{ DOW:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], DOWL:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], MON:['January','February','March','April','May','June','July','August','September','October','November','December'], STYLE_LABEL:{ clase:'Class', lab:'Lab', estudio:'Study', entrega:'Deliverable', examen:'Exam', practicas:'Work', personal:'Personal', cita:'Appointment', bloqueo:'Unavailable' }, RULES_DAY:{ noexam:'No exams', examonly:'Exams only', light:'Light day', free:'Free' } },
+};
+function setLocale(l){ const L=LOCALES[l]||LOCALES.es; LOCALE=L===LOCALES.en?'en':'es'; DOW.splice(0,7,...L.DOW); DOWL.splice(0,7,...L.DOWL); MON.splice(0,12,...L.MON); Object.assign(STYLE_LABEL,L.STYLE_LABEL); Object.assign(RULES_DAY,L.RULES_DAY); }
+const getLocale = () => LOCALE;
+
 const DEFAULT_SETTINGS = {
   weekday:['09:00','22:00'], weekend:['10:00','21:00'], weekdaySoftEnd:'20:30', weekendSoftEnd:'20:00',
   blockMax:120, blockMin:45, breakMin:10, dailyCap:420, maxSubjectsPerDay:3, concentrate:true,
   colorBy:'subject', gridStart:7, gridEnd:24,
-  commuteMin:60, commutePracMin:30, campusLeave:'20:05', campusWaitMax:90, campusName:'ICAI',
+  commuteMin:60, commutePracMin:30, campusLeave:'20:05', campusWaitMax:90, campusName:'Campus', workName:'', workStart:'09:00', workPlace:'',
   reviewDays:2, defaultExamHours:7,
   freezeDays:1,            // hoy + N días siguientes no se tocan (salvo conflicto)
   pastCountsAsDone:true,   // un bloque pasado sin marcar cuenta como hecho
@@ -44,7 +52,7 @@ const RULES_DAY = { noexam:'Sin exámenes', examonly:'Solo exámenes', light:'D�
 
 // Estilos visuales fijos por tipo. Cada tipo de la BD lleva `style`; si no, se deduce del id.
 const STYLES = ['clase','lab','estudio','entrega','examen','practicas','personal','cita','bloqueo'];
-const STYLE_LABEL = { clase:'Clase', lab:'Laboratorio', estudio:'Estudio', entrega:'Entrega', examen:'Examen', practicas:'Prácticas', personal:'Personal', cita:'Cita', bloqueo:'No disponible' };
+const STYLE_LABEL = { clase:'Clase', lab:'Laboratorio', estudio:'Estudio', entrega:'Entrega', examen:'Examen', practicas:'Trabajo', personal:'Personal', cita:'Cita', bloqueo:'No disponible' };
 function styleOf(S, typeId){
   const t = S.types && S.types[typeId];
   if (t && t.style && STYLES.includes(t.style)) return t.style;
@@ -63,9 +71,9 @@ function colorOf(S,x){ const s=subj(S,x.subjectId), t=typ(S,x.typeId); const st=
   return s.color||(t&&t.color)||'#6B7188'; }
 // Nombre canónico: "qué · Asignatura"
 function whatOf(S,x){
-  if (x.kind==='class'){ const st=styleOf(S,x.typeId); return x.title || (st==='lab'?'Laboratorio':st==='bloqueo'?'No disponible':'Clase'); }
+  if (x.kind==='class'){ const st=styleOf(S,x.typeId); return x.title || STYLE_LABEL[st] || STYLE_LABEL.clase; }
   if (x.taskId && S.tasks && S.tasks[x.taskId]){ const t=S.tasks[x.taskId]; const sec=(t.sections||[]).find(s=>s.id===x.sectionId); return t.title + (sec?' · '+sec.name:''); }
-  return x.title || STYLE_LABEL[styleOf(S,x.typeId)] || 'Evento';
+  return x.title || STYLE_LABEL[styleOf(S,x.typeId)] || (LOCALE==='en'?'Event':'Evento');
 }
 function labelOf(S,x){ const w=whatOf(S,x); const sh=shortOf(S,x.subjectId); return sh && !w.endsWith('· '+sh) ? `${w} · ${sh}` : w; }
 
@@ -149,6 +157,12 @@ function activeRules(S, now){
 function ruleText(S,r){
   const tn=id=>S.tasks[id]?S.tasks[id].title:'?', sn=id=>shortOf(S,id)||'?';
   const what=r.taskId?tn(r.taskId):r.subjectId?sn(r.subjectId):'';
+  if(LOCALE==='en'){
+    if(r.kind==='order') return `Finish “${tn(r.beforeTaskId)}” before starting “${tn(r.afterTaskId)}”`;
+    if(r.kind==='focus') return `${fmtDate(r.date+'T00:00')} ${r.zone==='am'?'in the morning':r.zone==='pm'?'in the evening':'all day'}: only ${what}`;
+    if(r.kind==='avoid') return `No ${what} ${r.from===r.until?'on '+fmtDate(r.from+'T00:00'):`from ${fmtDate(r.from+'T00:00')} to ${fmtDate(r.until+'T00:00')}`}`;
+    if(r.kind==='window') return `“${tn(r.taskId)}” only between ${fmtDate(r.from+'T00:00')} and ${fmtDate(r.until+'T00:00')}`;
+  }
   if(r.kind==='order') return `Terminar «${tn(r.beforeTaskId)}» antes de empezar «${tn(r.afterTaskId)}»`;
   if(r.kind==='focus') return `${fmtDate(r.date+'T00:00')} ${r.zone==='am'?'por la mañana':r.zone==='pm'?'por la tarde-noche':'todo el día'}: solo ${what}`;
   if(r.kind==='avoid') return `Nada de ${what} ${r.from===r.until?'el '+fmtDate(r.from+'T00:00'):`del ${fmtDate(r.from+'T00:00')} al ${fmtDate(r.until+'T00:00')}`}`;
@@ -394,7 +408,7 @@ function fillWindow(S, task, ds, from, to, maxMin, now){
   return out;
 }
 
-return { pad,DOW,DOWL,MON,dstr,tstr,iso,parse,mins,tfromMins,addDays,startOfWeek,sameDay,dayOf,r15,fmtDur,fmtDate,fmtDateLong,durOf,overlaps,uid,
+return { pad,DOW,DOWL,MON,setLocale,getLocale,LOCALES,dstr,tstr,iso,parse,mins,tfromMins,addDays,startOfWeek,sameDay,dayOf,r15,fmtDur,fmtDate,fmtDateLong,durOf,overlaps,uid,
   DEFAULT_SETTINGS,RULES_DAY,STYLES,STYLE_LABEL,styleOf,subj,typ,shortOf,colorOf,whatOf,labelOf,
   classesOn,eventsOn,itemsOn,isBlock,isStudy,isCampus,isPrac,leaveCampusAt,campusOn,campusStudyWindow,travelOn,tasksDueOn,ruleOf,isExam,isDeliv,
   workedMins,unitsOf,estimateOf,progressOf,remainingOf,plannedFuture,warnings,
