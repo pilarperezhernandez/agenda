@@ -5,133 +5,137 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Viernes 30 de octubre</title>
 <!--
-  Plantilla del correo matinal de Pilar. Es un EJEMPLO COMPLETO con datos reales de un día:
-  la tarea programada replica exactamente esta estructura y estos estilos con los datos del día.
-  Reglas de estilo: papel cálido (#F4F3EE), tinta (#1B1D22), hairlines (#E3E1DA), titular en serif itálica,
-  etiquetas en versalitas espaciadas, el color de cada asignatura solo como barra lateral fina.
-  Nada de degradados, emojis como iconos, ni tarjetas de colores chillones. Todo en tablas con estilos inline.
-  Estructura: 1) cabecera  2) "Lo esencial" (4-6 líneas, lo que se lee en 1 minuto)  3) Hoy (horario)
-  4) Pendientes  5) Ha llegado (correo y mensajes resumidos)  6) Mundo  7) pie.
+  Plantilla del correo matinal (estética Apple). EJEMPLO COMPLETO con datos ficticios de un día:
+  la tarea programada replica esta estructura y estos estilos con los datos del día.
+
+  Reglas de estilo (no cambiar):
+  - Lienzo gris claro #F5F5F7, tarjetas blancas con esquinas de 20px, SIN bordes ni sombras. Texto #1D1D1F, secundario #86868B,
+    separadores #E8E8ED. El único azul es el de los enlaces (#0A84FF). Los colores de asignatura aparecen solo como puntos de 10px.
+  - Tipografía del sistema: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial.
+    Titular 34px semibold con tracking -0.5px; títulos de tarjeta 20px semibold; cuerpo 15px; secundario 13px. Frases en minúscula
+    inicial (sentence case); nunca MAYÚSCULAS ni etiquetas encima de los títulos.
+  - IMPORTANTE para Gmail: usar siempre background-color (nunca el atajo background) y, en celdas, también bgcolor.
+    Todo con tablas y estilos inline. Nada de degradados, emojis, iconos genéricos ni «·» para unir metadatos.
+  - Orden: saludo y fecha · Hoy (como un widget de Calendario) · Recordatorios · Correo y mensajes (como filas de Mail) · Noticias · pie.
+  Los puntos de color usan el color de cada asignatura (campo color de subjects).
 -->
 </head>
-<body style="margin:0;padding:0;background:#F4F3EE;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F3EE;">
-<tr><td align="center" style="padding:28px 12px;">
-<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFFFF;border:1px solid #E3E1DA;">
+<body style="margin:0;padding:0;background-color:#F5F5F7;" bgcolor="#F5F5F7">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F5F5F7" style="background-color:#F5F5F7;">
+<tr><td align="center" style="padding:32px 14px 40px 14px;">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-  <!-- 1. CABECERA -->
-  <tr><td style="padding:30px 36px 18px 36px;border-bottom:1px solid #E3E1DA;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="font-family:Georgia,'Times New Roman',serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#71747E;">Agenda · mañana</td>
-      <td align="right" style="font-family:Georgia,'Times New Roman',serif;font-size:13px;color:#71747E;">semana 44</td>
-    </tr></table>
-    <div style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:38px;line-height:1.1;color:#1B1D22;margin-top:10px;">Viernes <span style="font-style:normal;">30</span> de octubre</div>
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#3C3F48;margin-top:10px;">
-      Tarde en ICAI: Optimización y laboratorio de Visión. Antes, la práctica 4 de Visión vence a las 17:00. Por la noche, Halloween.
-    </div>
+  <!-- Saludo -->
+  <tr><td style="padding:8px 8px 22px 8px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;">
+    <div style="font-size:34px;line-height:1.15;font-weight:600;letter-spacing:-0.5px;color:#1D1D1F;">Buenos días, Ana.</div>
+    <div style="font-size:17px;line-height:1.4;color:#86868B;margin-top:4px;">Viernes 30 de octubre. Tarde de clases y, antes, una entrega a las 17:00.</div>
   </td></tr>
 
-  <!-- 2. LO ESENCIAL -->
-  <tr><td style="padding:20px 36px 8px 36px;">
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#71747E;font-weight:bold;">Lo esencial</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><span style="color:#C9353F;font-weight:bold;">17:00</span> &nbsp;Vence la <b>Práctica 4 · Visión</b> (Sifo). Sin bloque de estudio planificado para ella.</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><span style="color:#B7791F;font-weight:bold;">Lun 2</span> &nbsp;Formulario del proyecto de prácticas AVEVA (obligatorio ese día, hora flexible).</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><b>Datathon en Endesa</b> el miércoles 18 nov, 10–14 h. Antonio Muñoz confirma que se celebra allí; no se ha podido mover la clase de Visión.</td></tr>
-      <tr><td style="padding:7px 0;border-bottom:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;">Comillas Contigo ha enviado a Antonio Muñoz y David Contreras tu <b>informe de adaptaciones</b> del 1er cuatrimestre.</td></tr>
-      <tr><td style="padding:7px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;">Dos entregas intermedias de <b>Paradigmas</b> (Desarrollo e inter OBS) figuran como vencidas el martes; aún se pueden subir como tardías.</td></tr>
+  <!-- Hoy -->
+  <tr><td style="padding:0 0 14px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:20px;">
+    <tr><td style="padding:22px 24px 10px 24px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="font-size:20px;font-weight:600;color:#1D1D1F;">Hoy</td>
+        <td align="right" style="font-size:13px;color:#86868B;">2 clases, 4 h 30 libres por la mañana</td>
+      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">
+        <tr>
+          <td width="54" valign="top" style="padding:10px 0;font-size:15px;color:#86868B;">9:00</td>
+          <td width="10" valign="top" style="padding:14px 0 0 0;"><div style="width:10px;height:10px;border-radius:5px;background-color:#D1D1D6;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;">Hueco libre hasta las 13:30<br><span style="font-size:13px;color:#86868B;">el único rato antes de las 17:00 para la práctica de Física</span></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:10px 0;font-size:15px;color:#86868B;">15:00</td>
+          <td valign="top" style="padding:14px 0 0 0;"><div style="width:10px;height:10px;border-radius:5px;background-color:#B24FC4;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;">Álgebra lineal<br><span style="font-size:13px;color:#86868B;">hasta las 16:50, aula A-101</span></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:10px 0;font-size:15px;color:#86868B;">17:00</td>
+          <td valign="top" style="padding:14px 0 0 0;"><div style="width:10px;height:10px;border-radius:5px;background-color:#D93B47;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;">Laboratorio de Física<br><span style="font-size:13px;color:#86868B;">hasta las 19:05, laboratorio B-2</span></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:10px 0;font-size:15px;color:#86868B;">19:10</td>
+          <td valign="top" style="padding:14px 0 0 0;"><div style="width:10px;height:10px;border-radius:5px;background-color:#8E8E93;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;">No disponible<br><span style="font-size:13px;color:#86868B;">hasta las 22:00, con un hueco de 20:05 a 21:10</span></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:10px 0;font-size:15px;color:#86868B;">22:00</td>
+          <td valign="top" style="padding:14px 0 0 0;"><div style="width:10px;height:10px;border-radius:5px;background-color:#0033ff;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;font-size:15px;line-height:1.4;color:#1D1D1F;">Cena con amigos</td>
+        </tr>
+      </table>
+      <div style="font-size:13px;color:#86868B;padding:10px 0 12px 0;">Mañana: intensivo de Programación de 15:00 a 19:30 y plan con Marta a las 21:30.</div>
+    </td></tr>
     </table>
   </td></tr>
 
-  <!-- 3. HOY -->
-  <tr><td style="padding:22px 36px 8px 36px;">
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#71747E;font-weight:bold;">Hoy</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-      <tr>
-        <td width="62" valign="top" style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;white-space:nowrap;">mañana</td>
-        <td width="4" style="padding:8px 0;"><div style="width:3px;height:30px;background:#CFCDC5;"></div></td>
-        <td style="padding:8px 0 8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;">Libre hasta las 14:00 <span style="color:#71747E;">· hueco de estudio: 09:00–13:30</span></td>
-      </tr>
-      <tr>
-        <td valign="top" style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;white-space:nowrap;">14:00</td>
-        <td style="padding:8px 0;"><div style="width:3px;height:30px;background:#E2E0D8;"></div></td>
-        <td style="padding:8px 0 8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#71747E;">Trayecto a ICAI</td>
-      </tr>
-      <tr>
-        <td valign="top" style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;white-space:nowrap;">15:00</td>
-        <td style="padding:8px 0;"><div style="width:3px;height:30px;background:#B24FC4;"></div></td>
-        <td style="padding:8px 0 8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><b>Clase · Optimización</b> <span style="color:#71747E;">15:00–16:50 · ICAI-A-503</span></td>
-      </tr>
-      <tr>
-        <td valign="top" style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;white-space:nowrap;">17:00</td>
-        <td style="padding:8px 0;"><div style="width:3px;height:30px;background:#D93B47;"></div></td>
-        <td style="padding:8px 0 8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><b>Laboratorio · Visión</b> <span style="color:#71747E;">17:00–19:05 · ICAI-A-503 / LCP1-3</span></td>
-      </tr>
-      <tr>
-        <td valign="top" style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;white-space:nowrap;">19:10</td>
-        <td style="padding:8px 0;"><div style="width:3px;height:30px;background:#707070;"></div></td>
-        <td style="padding:8px 0 8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#71747E;">No disponible 19:10–20:05 y 21:10–22:00</td>
-      </tr>
-      <tr>
-        <td valign="top" style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;white-space:nowrap;">22:00</td>
-        <td style="padding:8px 0;"><div style="width:3px;height:30px;background:#0033ff;"></div></td>
-        <td style="padding:8px 0 8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><b>Fiesta Halloween</b> <span style="color:#71747E;">22:00–23:59</span></td>
-      </tr>
-    </table>
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#71747E;margin-top:6px;">Mañana sábado: intensivo de Series 15:00–19:30 y plan con Zubi a las 21:30.</div>
-  </td></tr>
-
-  <!-- 4. PENDIENTES -->
-  <tr><td style="padding:22px 36px 8px 36px;">
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#71747E;font-weight:bold;">Pendientes</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-      <tr>
-        <td width="4" style="padding:8px 0;"><div style="width:3px;height:34px;background:#D93B47;"></div></td>
-        <td style="padding:8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;border-bottom:1px solid #E3E1DA;"><b>Laboratorio de Visión</b><br><span style="font-size:12px;color:#C9353F;">Venció el martes 27 · 0 % · 2 h estimadas</span></td>
-      </tr>
-      <tr>
-        <td style="padding:8px 0;"><div style="width:3px;height:34px;background:#5900ff;"></div></td>
-        <td style="padding:8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;border-bottom:1px solid #E3E1DA;"><b>Formulario proyecto AVEVA</b><br><span style="font-size:12px;color:#71747E;">Lunes 2 nov · 0 % · 2 h estimadas · urgente</span></td>
-      </tr>
-      <tr>
-        <td style="padding:8px 0;"><div style="width:3px;height:34px;background:#D93B47;"></div></td>
-        <td style="padding:8px 12px;font-family:Helvetica,Arial,sans-serif;font-size:14px;color:#1B1D22;"><b>Práctica 4 · Visión (Sifo)</b><br><span style="font-size:12px;color:#71747E;">Hoy 17:00 · no está en la agenda como tarea</span></td>
-      </tr>
+  <!-- Recordatorios -->
+  <tr><td style="padding:0 0 14px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:20px;">
+    <tr><td style="padding:22px 24px 12px 24px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="font-size:20px;font-weight:600;color:#1D1D1F;">Recordatorios</td>
+        <td align="right" style="font-size:13px;color:#86868B;">3 pendientes</td>
+      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
+        <tr>
+          <td width="22" valign="top" style="padding:12px 0;"><div style="width:18px;height:18px;border-radius:9px;border:1.5px solid #D93B47;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;">Práctica 4 de Física (campus virtual)<br><span style="font-size:13px;color:#FF3B30;">Hoy, 17:00</span><span style="font-size:13px;color:#86868B;"> &nbsp;No está como tarea en la agenda</span></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:12px 0;"><div style="width:18px;height:18px;border-radius:9px;border:1.5px solid #D93B47;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;">Informe del laboratorio<br><span style="font-size:13px;color:#FF3B30;">Venció el martes 27</span><span style="font-size:13px;color:#86868B;"> &nbsp;2 h estimadas, sin empezar</span></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:12px 0;"><div style="width:18px;height:18px;border-radius:9px;border:1.5px solid #5900ff;"></div></td>
+          <td valign="top" style="padding:10px 0 10px 12px;font-size:15px;line-height:1.4;color:#1D1D1F;">Formulario del proyecto de prácticas<br><span style="font-size:13px;color:#86868B;">Lunes 2 de noviembre, obligatorio ese día &nbsp;2 h estimadas</span></td>
+        </tr>
+      </table>
+      <div style="font-size:13px;color:#86868B;padding:10px 0 10px 0;">Dos entregas intermedias de Programación figuran como vencidas el martes; aún se pueden subir como tardías.</div>
+    </td></tr>
     </table>
   </td></tr>
 
-  <!-- 5. HA LLEGADO -->
-  <tr><td style="padding:22px 36px 8px 36px;">
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#71747E;font-weight:bold;">Ha llegado</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-      <tr><td style="padding:10px 0 4px 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:#1B1D22;">Comillas (Outlook)</td></tr>
-      <tr><td style="padding:4px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#3C3F48;">
-        Antonio Muñoz anuncia el <b>datathon en Endesa</b> (mié 18 nov, 10–14 h) y, en tu hilo, confirma que no han podido cambiar la clase de Visión ese día. &nbsp;·&nbsp; Comunicación convoca un minuto de silencio por el accidente ferroviario. &nbsp;·&nbsp; Sofía Sánchez te ha compartido el documento «memoria». &nbsp;·&nbsp; Avisos de Sifo: Práctica 4 de Visión vence hoy; dos entregas de Paradigmas vencieron el martes.
-      </td></tr>
-      <tr><td style="padding:12px 0 4px 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:#1B1D22;">Gmail</td></tr>
-      <tr><td style="padding:4px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#3C3F48;">
-        Barclays ha cerrado tu ticket QRY2959942 (Early Careers) con respuesta. &nbsp;·&nbsp; LinkedIn: una invitación nueva y una sugerencia de contacto. &nbsp;·&nbsp; Correos de alta de Supabase y GitHub (los de hoy, de la agenda nueva).
-      </td></tr>
-      <tr><td style="padding:12px 0 4px 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;color:#1B1D22;">Teams</td></tr>
-      <tr><td style="padding:4px 0 10px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#3C3F48;">
-        Movimiento en el grupo <b>BUDDIES!</b> (Adriana, Ilya, Ferdinand, Floris). Nada nuevo de AVEVA.
-      </td></tr>
+  <!-- Correo y mensajes -->
+  <tr><td style="padding:0 0 14px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:20px;">
+    <tr><td style="padding:22px 24px 12px 24px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="font-size:20px;font-weight:600;color:#1D1D1F;">Correo y mensajes</td>
+        <td align="right" style="font-size:13px;color:#86868B;">desde ayer a las 7</td>
+      </tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;"><b style="font-weight:600;">Prof. García</b> <span style="color:#86868B;font-size:13px;">Universidad</span><br>Datathon en una empresa el miércoles 18 de noviembre, de 10 a 14. En tu hilo confirma que no han podido mover la clase de Física ese día.</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;"><b style="font-weight:600;">Secretaría</b> <span style="color:#86868B;font-size:13px;">Universidad</span><br>Han enviado a tus profesores el informe del primer cuatrimestre.</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;"><b style="font-weight:600;">Laura</b> <span style="color:#86868B;font-size:13px;">Universidad</span><br>Te ha compartido el documento «memoria».</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;"><b style="font-weight:600;">Empresa X</b> <span style="color:#86868B;font-size:13px;">Gmail</span><br>Han cerrado tu consulta sobre el proceso de selección con respuesta.</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.4;color:#1D1D1F;"><b style="font-weight:600;">Grupo de prácticas</b> <span style="color:#86868B;font-size:13px;">Teams</span><br>Mensajes nuevos de Adriana, Ilya y Floris.</td></tr>
+        <tr><td style="padding:10px 0;font-size:13px;line-height:1.4;color:#86868B;">También: un aviso de la universidad, una invitación en LinkedIn y dos newsletters. Nada nuevo del trabajo.</td></tr>
+      </table>
+    </td></tr>
     </table>
   </td></tr>
 
-  <!-- 6. MUNDO -->
-  <tr><td style="padding:22px 36px 26px 36px;border-top:1px solid #E3E1DA;">
-    <div style="font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#71747E;font-weight:bold;">Mundo</div>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;">
-      <tr><td style="padding:8px 0;border-bottom:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#1B1D22;"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#71747E;">España</span><br>Choque entre un Iryo y un AVE en la línea Madrid–Andalucía, en Toledo: al menos 68 muertos, según los últimos balances. <a href="https://www.infobae.com/espana/2026/10/28/en-directo-accidente-ferroviario-en-toledo-numerosos-heridos-tras-el-choque-de-dos-trenes-en-la-linea-madrid-andalucia/" style="color:#71747E;">Infobae</a></td></tr>
-      <tr><td style="padding:8px 0;border-bottom:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#1B1D22;"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#71747E;">IA y tecnología</span><br>OpenAI negocia comprar chips de IA a Google para entrenar sus modelos, tras llevar sus modelos a Google Cloud la semana pasada. <a href="https://infobae.com/tecno/2026/10/28/openai-planea-comprar-chips-google-para-entrenar-sus-modelos-de-ia" style="color:#71747E;">Infobae</a></td></tr>
-      <tr><td style="padding:8px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;color:#1B1D22;"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#71747E;">IA y tecnología</span><br>OpenAI lanza GPT-6.1 Terra, orientado a automatizar tareas de oficina, con tarifas hasta un 58 % más bajas. <a href="https://www.infobae.com/tecno/2026/10/29/openai-lanza-gpt-61-terra-para-automatizar-oficinas-con-tarifas-hasta-un-58-menores/" style="color:#71747E;">Infobae</a></td></tr>
+  <!-- Noticias -->
+  <tr><td style="padding:0 0 14px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF;border-radius:20px;">
+    <tr><td style="padding:22px 24px 14px 24px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;">
+      <div style="font-size:20px;font-weight:600;color:#1D1D1F;">Noticias</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.45;color:#1D1D1F;">Titular de actualidad general en una línea, con su cifra o dato clave. <a href="#" style="color:#0A84FF;text-decoration:none;">Medio</a></td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #E8E8ED;font-size:15px;line-height:1.45;color:#1D1D1F;">Titular de economía o bolsa en una línea. <a href="#" style="color:#0A84FF;text-decoration:none;">Medio</a></td></tr>
+        <tr><td style="padding:10px 0;font-size:15px;line-height:1.45;color:#1D1D1F;">Titular de tecnología o IA en una línea. <a href="#" style="color:#0A84FF;text-decoration:none;">Medio</a></td></tr>
+      </table>
+    </td></tr>
     </table>
   </td></tr>
 
-  <!-- 7. PIE -->
-  <tr><td style="padding:14px 36px;background:#F4F3EE;border-top:1px solid #E3E1DA;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#71747E;">
-    <a href="https://pilarperezhernandez.github.io/agenda/" style="color:#1B1D22;text-decoration:none;font-weight:bold;">Abrir la agenda</a> &nbsp;·&nbsp; Generado por Claude a las 07:15
+  <!-- Pie -->
+  <tr><td align="center" style="padding:10px 8px 0 8px;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#86868B;">
+    <a href="#" style="color:#0A84FF;text-decoration:none;font-weight:600;">Abrir la agenda</a>
+    <div style="margin-top:8px;">Preparado a las 7:15</div>
   </td></tr>
 </table>
 </td></tr>
